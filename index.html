@@ -108,6 +108,23 @@
       });
     }
   });
+  // --- BLOKADA LISTY GODZIN BEZ TRASY ---
+  const poleGodzin = document.getElementById('hourSelect');
+  
+  if (poleGodzin) {
+    function zablokujGodziny(e) {
+      const trasa = document.getElementById('routeSelect').value;
+      if (!trasa || trasa === "") {
+        e.preventDefault(); // Blokuje rozwinięcie szarej listy
+        pokazAlert("WYBIERZ NAJPIERW TRASĘ!"); // Odpala nasz czerwony dymek
+      }
+    }
+    
+    // Podpinamy nasłuchiwanie dla komputerów i telefonów
+    poleGodzin.addEventListener('mousedown', zablokujGodziny);
+    poleGodzin.addEventListener('touchstart', zablokujGodziny); // Kluczowe dla ekranów dotykowych!
+    poleGodzin.addEventListener('click', zablokujGodziny);
+  }
 </script>
 </body>
 </html>
