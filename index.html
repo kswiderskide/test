@@ -108,17 +108,23 @@
       });
     }
   });
-  // --- BLOKADA LISTY GODZIN BEZ TRASY ---
+  // --- BLOKADA PUSTYCH GODZIN (MYSZKA I DOTYK) ---
   const poleGodzin = document.getElementById('hourSelect');
-  
   if (poleGodzin) {
     function zablokujGodziny(e) {
       const trasa = document.getElementById('routeSelect').value;
       if (!trasa || trasa === "") {
-        e.preventDefault(); // Blokuje rozwinięcie szarej listy
-        pokazAlert("WYBIERZ NAJPIERW TRASĘ!"); // Odpala nasz czerwony dymek
+        e.preventDefault(); 
+        this.blur(); // Magiczny składnik - natychmiast zamyka listę na telefonie!
+        pokazAlert("WYBIERZ NAJPIERW TRASĘ!"); 
       }
     }
+    
+    // Złapie każde możliwe "dotknięcie" i próbę podświetlenia
+    poleGodzin.addEventListener('mousedown', zablokujGodziny);
+    poleGodzin.addEventListener('touchstart', zablokujGodziny);
+    poleGodzin.addEventListener('focus', zablokujGodziny); 
+  }
     
     // Podpinamy nasłuchiwanie dla komputerów i telefonów
     poleGodzin.addEventListener('mousedown', zablokujGodziny);
