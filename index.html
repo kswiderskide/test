@@ -3,46 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Portal Kierowcy</title>
+  <title>TRASY</title>
   
-  <!-- PLIK MANIFESTU (Odpowiada za nazwę, ikonę i pełny ekran) -->
-  <link rel="manifest" href="manifest.json">
+  <!-- TUTAJ BYŁ BŁĄD: Teraz wskazuje na poprawny plik app.webmanifest -->
+  <link rel="manifest" href="app.webmanifest">
   <meta name="theme-color" content="#1a1a1a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="Tyliszczak.png">
   
   <style>
-    /* Usuwamy wszystkie marginesy, żeby Google Apps Script wypełniło 100% ekranu telefonu */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background-color: #1a1a1a;
-    }
-    iframe {
-      width: 100vw;
-      height: 100vh;
-      border: none;
-      display: block;
-    }
+    body, html { margin: 0; padding: 0; height: 100vh; overflow: hidden; background: #1a1a1a; }
+    iframe { width: 100%; height: 100%; border: none; }
   </style>
 </head>
 <body>
 
-  <!-- TUTAJ WKLEJ TEN DŁUGI LINK SKOPIOWANY Z KROKU 1 -->
+  <!-- TUTAJ WKLEJ LINK DO ZAKTUALIZOWANEJ APKI Z GOOGLE -->
   <iframe src="https://script.google.com/macros/s/AKfycbzGQDm_KDkVyK-QjVUWyru0eNe8k3zR1jjjJsKvIF_AcGI69ZncaDBNGXMmsNYyI8jU/exec"></iframe>
-
-  <script>
-    // Rejestracja Service Workera (Wymusza na telefonie pokazanie paska instalacji)
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('Service Worker zarejestrowany!'))
-          .catch(err => console.log('Błąd rejestracji Service Workera:', err));
-      });
-    }
-  </script>
 
 </body>
 </html>
