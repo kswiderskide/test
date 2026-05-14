@@ -5,131 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Portal Kierowcy</title>
   
-  <link rel="icon" href="Tyliszczak.png" type="image/png">
-  <link rel="apple-touch-icon" href="Tyliszczak.png">
-  <link rel="manifest" href="app.webmanifest">
-
+  <!-- PLIK MANIFESTU (Odpowiada za nazwę, ikonę i pełny ekran) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a1a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #1a1a1a; font-family: sans-serif; }
-    iframe { border: none; width: 100%; height: 100%; display: block; }
-    
-    /* Styl paska z komunikatem */
-    #install-banner {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ccff33;
-      color: #000;
-      padding: 15px;
-      display: none; /* Ukryty domyślnie */
-      justify-content: space-between;
-      align-items: center;
-      z-index: 9999;
-      font-weight: bold;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+    /* Usuwamy wszystkie marginesy, żeby Google Apps Script wypełniło 100% ekranu telefonu */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #1a1a1a;
     }
-    #install-button {
-      background: #000;
-      color: #fff;
+    iframe {
+      width: 100vw;
+      height: 100vh;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <iframe src="https://script.google.com/macros/s/AKfycbzGQDm_KDkVyK-QjVUWyru0eNe8k3zR1jjjJsKvIF_AcGI69ZncaDBNGXMmsNYyI8jU/exec" allow="screen-wake-lock" style="width:100%; height:100%; border:none;"></iframe>
- <!-- PASEK INSTALACJI HTML (Z wymuszonym wyglądem checkboxa) -->
-<div id="install-banner" style="display: none; background-color: #333; color: white; padding: 15px; position: fixed; bottom: 0; width: 100%; z-index: 9999; text-align: center; border-top: 2px solid #ccff33; font-family: Arial, sans-serif;">
-  <span style="display: block; margin-bottom: 10px;">Chcesz zainstalować aplikację TRASY?</span>
-  
-  <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center;">
-    <input type="checkbox" id="dont-ask-checkbox" style="width: 20px; height: 20px; cursor: pointer; display: block !important; opacity: 1 !important; visibility: visible !important;">
-    <label for="dont-ask-checkbox" style="font-size: 16px; margin-left: 10px; cursor: pointer;">Nie pytaj ponownie</label>
-  </div>
+  <!-- TUTAJ WKLEJ TEN DŁUGI LINK SKOPIOWANY Z KROKU 1 -->
+  <iframe src="TUTAJ_WKLEJ_SWÓJ_NOWY_LINK_Z_GOOGLE_APPS_SCRIPT"></iframe>
 
-  <button id="install-button" style="background-color: #ccff33; color: black; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer;">ZAINSTALUJ</button>
-  <button id="reject-button" style="margin-left: 10px; background-color: #666; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">ODRZUĆ</button>
-</div>
-
-<!-- SKRYPT OBSŁUGUJĄCY PASEK -->
-<script>
-  // Czekamy na załadowanie całej strony, żeby mieć pewność, że przyciski istnieją
-  window.addEventListener('DOMContentLoaded', (event) => {
-    
-    let deferredPrompt;
-    const installBanner = document.getElementById('install-banner');
-    const installButton = document.getElementById('install-button');
-    const rejectButton = document.getElementById('reject-button');
-    const dontAskCheckbox = document.getElementById('dont-ask-checkbox');
-
-    // 1. Sprawdzamy, czy ktoś już kiedyś kliknął "Nie pytaj"
-    if (localStorage.getItem('pwa_ignore_install') === 'true') {
-      console.log('Instalacja zignorowana na stałe.');
-    } else {
-      // 2. Jeśli nie, nasłuchujemy systemowego eventu
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBanner.style.display = 'block';
+  <script>
+    // Rejestracja Service Workera (Wymusza na telefonie pokazanie paska instalacji)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker zarejestrowany!'))
+          .catch(err => console.log('Błąd rejestracji Service Workera:', err));
       });
     }
+  </script>
 
-    // 3. Reakcja na ZAINSTALUJ
-    if(installButton) {
-      installButton.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          if (outcome === 'accepted') {
-            installBanner.style.display = 'none';
-          }
-          deferredPrompt = null;
-        }
-      });
-    }
-
-    // 4. Reakcja na ODRZUĆ
-    if(rejectButton) {
-      rejectButton.addEventListener('click', () => {
-        // Sprawdzamy, czy checkbox był zaznaczony
-        if (dontAskCheckbox && dontAskCheckbox.checked) {
-          localStorage.setItem('pwa_ignore_install', 'true');
-        }
-        // Ukrywamy pasek
-        if(installBanner) {
-            installBanner.style.display = 'none';
-        }
-      });
-    }
-  });
-  // --- BLOKADA PUSTYCH GODZIN (MYSZKA I DOTYK) ---
-  const poleGodzin = document.getElementById('hourSelect');
-  if (poleGodzin) {
-    function zablokujGodziny(e) {
-      const trasa = document.getElementById('routeSelect').value;
-      if (!trasa || trasa === "") {
-        e.preventDefault(); 
-        this.blur(); // Magiczny składnik - natychmiast zamyka listę na telefonie!
-        pokazAlert("WYBIERZ NAJPIERW TRASĘ!"); 
-      }
-    }
-    
-    // Złapie każde możliwe "dotknięcie" i próbę podświetlenia
-    poleGodzin.addEventListener('mousedown', zablokujGodziny);
-    poleGodzin.addEventListener('touchstart', zablokujGodziny);
-    poleGodzin.addEventListener('focus', zablokujGodziny); 
-  }
-    
-    // Podpinamy nasłuchiwanie dla komputerów i telefonów
-    poleGodzin.addEventListener('mousedown', zablokujGodziny);
-    poleGodzin.addEventListener('touchstart', zablokujGodziny); // Kluczowe dla ekranów dotykowych!
-    poleGodzin.addEventListener('click', zablokujGodziny);
-  }
-</script>
 </body>
 </html>
