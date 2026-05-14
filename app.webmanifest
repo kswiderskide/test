@@ -7,11 +7,23 @@
     {
       "src": "Tyliszczak.png",
       "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "Tyliszczak.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "Tyliszczak.png",
+      "type": "image/png",
       "sizes": "1024x1024",
       "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#ccff33",
